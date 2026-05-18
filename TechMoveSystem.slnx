@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="../TechMoveSystem.Tests/TechMoveSystem.Tests.csproj" Id="f2fc4923-b673-4b26-8a3f-d77a3e760f52" />
+  <Project Path="TechMoveSystem.csproj" />
+</Solution>

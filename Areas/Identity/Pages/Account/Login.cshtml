@@ -1,0 +1,79 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Authorized Access";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-5">
+        
+        <div class="card shadow-lg border-0 rounded-3 overflow-hidden" style="border-top: 5px solid #f5b041 !important;">
+            
+            <div class="card-header bg-navy text-white text-center py-4 border-0">
+                <h3 class="fw-bold mb-1 tracking-wide" style="font-size: 1.6rem;">
+                    <i class="bi bi-shield-lock-fill text-warning me-2"></i> TECHMOVE SYSTEM
+                </h3>
+                <p class="text-white-50 small mb-0 uppercase tracking-wider">Authorized Gateway Console</p>
+            </div>
+
+            <div class="card-body p-5 bg-white">
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold small text-center" role="alert"></div>
+
+                    <p class="text-muted text-center mb-4 small">Please enter your verified credentials to access administrative logistics channels.</p>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label small fw-bold text-navy">Corporate Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Input.Email" class="form-control border-start-0 ps-0" autocomplete="username" aria-required="true" placeholder="name@company.com" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label small fw-bold text-navy">Account Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Input.Password" class="form-control border-start-0 ps-0" autocomplete="current-password" aria-required="true" placeholder="••••••••" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <div class="form-check m-0">
+                            <input class="form-check-input" asp-for="Input.RememberMe" style="cursor: pointer;" />
+                            <label class="form-check-label small text-secondary" asp-for="Input.RememberMe" style="cursor: pointer;">
+                                Keep me logged in
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button id="login-submit" type="submit" class="btn btn-navy btn-lg fw-bold shadow-sm transition-all py-2.5" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                            LOGIN TO DASHBOARD
+                        </button>
+                    </div>
+
+                    <div class="row mt-4 pt-3 border-top text-center g-2">
+                        <div class="col-12">
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none small text-primary fw-semibold"><i class="bi bi-question-circle me-1"></i> Forgot Password?</a>
+                        </div>
+                        <div class="col-12 mt-1">
+                            <p class="small text-muted mb-0">
+                                New checkpoint user?
+                                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none text-warning fw-bold ms-1" style="color: #dc921e !important;">Register New Account</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

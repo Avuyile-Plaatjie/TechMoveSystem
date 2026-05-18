@@ -1,0 +1,161 @@
+/* --- TECHMOVE SYSTEM: ENTERPRISE LOGIN PORTAL LAYOUT --- */
+
+/* 1. Global Reset & Main Body Background */
+body {
+    background-color: #f8f9fa !important;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* 2. Top Header Navigation Bar Custom Styling */
+.bg-navy {
+    background-color: #0d2346 !important; /* Premium Deep Navy Corporate Hue */
+    padding: 0.75rem 2rem !important;
+}
+
+.navbar-brand {
+    font-weight: 700 !important;
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+/* 3. Central Login Grid Workspace Wrapper */
+main[role="main"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75vh; /* Centers the login box perfectly vertically on screen */
+    padding: 2rem 0;
+}
+
+    /* Hide the plain raw default headers injected by Identity */
+    main[role="main"] h1,
+    main[role="main"] h2:has(+ h3) {
+        display: none !important;
+    }
+
+    /* Hide the default generic right-hand external services split column */
+    main[role="main"] .col-md-6:has(h3:contains("another service")),
+    main[role="main"] .col-md-offset-2,
+    main[role="main"] section:has(h4:contains("external service")) {
+        display: none !important;
+    }
+
+    /* Force the form column container to take full center width restrictions */
+    main[role="main"] .col-md-4,
+    main[role="main"] .col-md-5,
+    main[role="main"] .col-md-6 {
+        width: 100% !important;
+        max-width: 520px !important;
+        margin: 0 auto !important;
+        float: none !important;
+    }
+
+/* 4. The Authorized Access Central Card Container Panel */
+form#account {
+    background: #ffffff !important;
+    padding: 3rem 2.5rem !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1rem 3rem rgba(13, 35, 70, 0.08) !important; /* Premium soft design drop-shadow */
+    border: 1px solid #e9ecef !important;
+    position: relative;
+}
+
+    /* Injecting the custom "TechMoveSystem: Authorized Access" headers dynamically via CSS */
+    form#account::before {
+        content: "TechMoveSystem:\A Authorized Access";
+        white-space: pre-wrap;
+        display: block;
+        text-align: center;
+        color: #0d2346;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+    }
+
+    form#account::after {
+        content: "Enter your credentials to manage logistics.";
+        display: block;
+        text-align: center;
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        position: absolute;
+        top: 6.5rem;
+        left: 0;
+        right: 0;
+    }
+
+    /* Shift the original input rows down slightly to make space for our injected titles */
+    form#account div.form-floating:first-of-type,
+    form#account div.mb-3:first-of-type {
+        margin-top: 5.5rem !important;
+    }
+
+    /* 5. Custom Form Controls and Input Fields */
+    form#account .form-control {
+        border: 1px solid #ced4da !important;
+        padding: 0.75rem 1rem !important;
+        border-radius: 6px !important;
+        font-size: 0.95rem !important;
+        color: #495057 !important;
+        transition: all 0.2s ease-in-out;
+    }
+
+        form#account .form-control:focus {
+            border-color: #1a73e8 !important;
+            box-shadow: 0 0 0 0.2rem rgba(26, 115, 232, 0.15) !important;
+        }
+
+    /* 6. Execution Processing Login Action Button */
+    form#account button[type="submit"] {
+        background-color: #1a73e8 !important; /* Premium Blue Execution Tone */
+        border: none !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0.8rem !important;
+        border-radius: 6px !important;
+        width: 100% !important;
+        transition: background-color 0.15s ease-in-out !important;
+        margin-top: 1rem !important;
+    }
+
+        form#account button[type="submit"]:hover {
+            background-color: #155cb4 !important;
+        }
+
+    /* 7. Bottom Navigation Utilities Links Layout */
+    form#account div:has(p a) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 1.5rem !important;
+        border-top: 1px solid #f1f3f5;
+        padding-top: 1.2rem;
+    }
+
+    form#account p {
+        margin-bottom: 0 !important;
+    }
+
+    form#account a {
+        color: #1a73e8 !important;
+        text-decoration: none !important;
+        font-size: 0.9rem !important;
+        font-weight: 500;
+    }
+
+        form#account a:hover {
+            text-decoration: underline !important;
+            color: #155cb4 !important;
+        }
+
+    /* Customize checkbox line layout */
+    form#account .checkbox {
+        margin-bottom: 1rem !important;
+        color: #495057;
+        font-size: 0.9rem;
+    }

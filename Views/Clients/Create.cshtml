@@ -1,0 +1,60 @@
+﻿@model TechMoveSystem.Models.Client
+
+<div class="container mt-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 page-container-footer">
+                
+                <div class="card-header bg-navy text-white py-3 border-bottom border-4 border-warning">
+                    <h5 class="mb-0 fw-bold text-uppercase tracking-wider">
+                        <i class="bi bi-person-plus-fill text-warning me-2"></i> Client Registration Form
+                    </h5>
+                </div>
+                
+                <div class="card-body p-4 bg-white">
+                    <form asp-action="Create" method="post">
+                        
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold small"></div>
+
+                        <div class="mb-3">
+                            <label for="Name" class="form-label fw-bold text-navy">Full Name / Entity</label>
+                            <input type="text" name="Name" id="Name" class="form-control form-control-lg border-navy" placeholder="Enter company or individual name..." required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ContactDetails" class="form-label fw-bold text-navy">Contact Information</label>
+                            <input type="text" name="ContactDetails" id="ContactDetails" class="form-control border-navy" placeholder="Phone number or professional email..." required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="Region" class="form-label fw-bold text-navy">Assigned Region</label>
+                            <select name="Region" id="Region" class="form-select border-navy" required>
+                                <option value="">Select Operational Region...</option>
+                                <option value="Gauteng">Gauteng (GP)</option>
+                                <option value="Western Cape">Western Cape (WC)</option>
+                                <option value="KwaZulu-Natal">KwaZulu-Natal (KZN)</option>
+                                <option value="Eastern Cape">Eastern Cape (EC)</option>
+                                <option value="Free State">Free State (FS)</option>
+                                <option value="Mpumalanga">Mpumalanga (MP)</option>
+                                <option value="Limpopo">Limpopo (LP)</option>
+                                <option value="North West">North West (NW)</option>
+                                <option value="Northern Cape">Northern Cape (NC)</option>
+                                <option value="SADC International">SADC Cross-Border Corridor</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold border-2 border-navy text-navy shadow-sm">
+                                SUBMIT TO DATABASE
+                            </button>
+                            <a asp-action="Index" class="btn btn-link text-muted text-decoration-none small text-center mt-1">
+                                <i class="bi bi-arrow-left"></i> Cancel and Return
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Create System Account";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="col-md-5">
+        
+        <div class="card shadow-lg border-0 rounded-3 overflow-hidden" style="border-top: 5px solid #f5b041 !important;">
+            
+            <div class="card-header bg-navy text-white text-center py-4 border-0">
+                <h3 class="fw-bold mb-1 tracking-wide" style="font-size: 1.6rem;">
+                    <i class="bi bi-person-plus-fill text-warning me-2"></i> TECHMOVE SYSTEM
+                </h3>
+                <p class="text-white-50 small mb-0 uppercase tracking-wider">Account Creation Console</p>
+            </div>
+
+            <div class="card-body p-5 bg-white">
+                <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold small text-center" role="alert"></div>
+
+                    <p class="text-muted text-center mb-4 small">Please configure your secure checkpoint credentials to establish administrative system permissions.</p>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.FullName" class="form-label small fw-bold text-navy">Employee Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-person"></i></span>
+                            <input asp-for="Input.FullName" class="form-control border-start-0 ps-0" autocomplete="name" aria-required="true" placeholder="John Doe" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.FullName" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Email" class="form-label small fw-bold text-navy">Corporate Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Input.Email" class="form-control border-start-0 ps-0" autocomplete="username" aria-required="true" placeholder="name@company.com" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.Email" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Input.Password" class="form-label small fw-bold text-navy">Account Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Input.Password" class="form-control border-start-0 ps-0" autocomplete="new-password" aria-required="true" placeholder="••••••••" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.Password" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Input.ConfirmPassword" class="form-label small fw-bold text-navy">Confirm Account Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-check"></i></span>
+                            <input asp-for="Input.ConfirmPassword" class="form-control border-start-0 ps-0" autocomplete="new-password" aria-required="true" placeholder="••••••••" required style="border-radius: 0 6px 6px 0;" />
+                        </div>
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger small fw-semibold"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button id="registerSubmit" type="submit" class="btn btn-navy btn-lg fw-bold shadow-sm transition-all py-2.5" style="font-size: 0.95rem; letter-spacing: 0.5px;">
+                            REGISTER SYSTEM ACCOUNT
+                        </button>
+                    </div>
+
+                    <div class="row mt-4 pt-3 border-top text-center g-2">
+                        <div class="col-12">
+                            <p class="small text-muted mb-0">
+                                Already possess system authorization?
+                                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none text-warning fw-bold ms-1" style="color: #dc921e !important;">Log In Instead</a>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,73 @@
+﻿@model TechMoveSystem.Models.Client
+
+@{
+    ViewData["Title"] = "Modify Client Profile";
+}
+
+<div class="container mt-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                
+                <div class="card-header bg-navy text-white py-3 border-bottom border-4 border-warning">
+                    <h5 class="mb-0 fw-bold text-uppercase">
+                        <i class="bi bi-pencil-square text-warning me-2"></i> Modify Client Profile
+                    </h5>
+                </div>
+                
+                <div class="card-body p-4 bg-white">
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold small"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold text-navy">Corporate / Entity Name</label>
+                            <input asp-for="Name" class="form-control border-navy" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ContactDetails" class="form-label fw-bold text-navy">Contact Information Records</label>
+                            <input asp-for="ContactDetails" class="form-control border-navy" required />
+                            <span asp-validation-for="ContactDetails" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Region" class="form-label fw-bold text-navy">Assigned Logistics Hub Region</label>
+                            <select asp-for="Region" class="form-select border-navy" required>
+                                <option value="">-- Select Province Hub --</option>
+                                <option value="Gauteng">Gauteng</option>
+                                <option value="Western Cape">Western Cape</option>
+                                <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                <option value="Eastern Cape">Eastern Cape</option>
+                                <option value="Free State">Free State</option>
+                                <option value="Mpumalanga">Mpumalanga</option>
+                                <option value="Limpopo">Limpopo</option>
+                                <option value="North West">North West</option>
+                                <option value="Northern Cape">Northern Cape</option>
+                            </select>
+                            <span asp-validation-for="Region" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold border-2 border-navy text-navy shadow">
+                                UPDATE ENTERPRISE RECORDS
+                            </button>
+                            <a asp-action="Index" class="btn btn-link text-muted text-decoration-none small text-center">
+                                Cancel & Return to Registry
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

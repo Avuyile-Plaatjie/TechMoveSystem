@@ -1,0 +1,76 @@
+﻿@model TechMoveSystem.Models.Contract
+
+<div class="container mt-4 page-container-footer bg-white shadow-sm p-4 rounded">
+    <div class="border-bottom border-4 border-warning pb-2 mb-4">
+        <h2 class="text-navy fw-bold text-uppercase"><i class="bi bi-file-earmark-text-fill"></i> Register New Agreement</h2>
+        <p class="text-muted small mb-0">Establish legal frameworks, operating dates, and operational levels.</p>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3 fw-bold small"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="ClientId" class="form-label fw-bold text-navy">Select Client</label>
+                <select name="ClientId" id="ClientId" class="form-select border-navy" asp-items="ViewBag.ClientId" required>
+                    <option value="">-- Choose Registered Entity --</option>
+                </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="ServiceLevel" class="form-label fw-bold text-navy">Service Level Tier</label>
+                <select asp-for="ServiceLevel" class="form-select border-navy" required>
+                    <option value="Basic">Basic Logistics Allocation</option>
+                    <option value="Premium">Premium Priority Freight</option>
+                    <option value="Enterprise">Enterprise Fleet Tier</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="StartDate" class="form-label fw-bold text-navy">Execution/Start Date</label>
+                <input asp-for="StartDate" type="date" class="form-control border-navy" required />
+                <span asp-validation-for="StartDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="EndDate" class="form-label fw-bold text-navy">Expiration/End Date</label>
+                <input asp-for="EndDate" type="date" class="form-control border-navy" required />
+                <span asp-validation-for="EndDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label asp-for="Status" class="form-label fw-bold text-navy">Initial System Status</label>
+                <select asp-for="Status" class="form-select border-navy" required>
+                    <option value="Draft">Draft Mode</option>
+                    <option value="Active">Active Operational</option>
+                    <option value="Expired">Expired</option>
+                    <option value="On Hold">On Hold / Suspended</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+            </div>
+        </div>
+
+        <div class="mb-4 bg-light p-3 rounded border">
+            <label class="form-label fw-bold text-navy"><i class="bi bi-file-pdf"></i> Upload Signed Agreement Document</label>
+            <input type="file" name="pdfFile" class="form-control border-navy" accept=".pdf" required />
+            <div class="form-text text-muted">Mandatory Requirement: Only PDF formats are cleared for server emulation storage.</div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-warning btn-lg fw-bold border-2 border-navy text-navy shadow">
+                SAVE CONTRACT & INITIALIZE
+            </button>
+            <a asp-action="Index" class="btn btn-link text-muted text-decoration-none small text-center">
+                <i class="bi bi-arrow-left"></i> Abort and Return
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
