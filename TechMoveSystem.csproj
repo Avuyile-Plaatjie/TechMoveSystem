@@ -7,21 +7,36 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="TechMoveSystem.Api\**\*.cs" />
+		<Compile Remove="TechMoveSystem.IntegrationTests\**\*.cs" />
+
+		<Content Remove="TechMoveSystem.Api\**\*" />
+		<Content Remove="TechMoveSystem.IntegrationTests\**\*" />
+
+		<None Remove="TechMoveSystem.Api\**\*" />
+		<None Remove="TechMoveSystem.IntegrationTests\**\*" />
+
+		<EmbeddedResource Remove="TechMoveSystem.Api\**\*" />
+		<EmbeddedResource Remove="TechMoveSystem.IntegrationTests\**\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.22" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.23" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.23">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.23" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.23">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
-		<PackageReference Include="xunit" Version="2.5.3" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 	</ItemGroup>
 
 </Project>

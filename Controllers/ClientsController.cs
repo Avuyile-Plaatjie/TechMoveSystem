@@ -1,147 +1,55 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using TechMoveSystem.Data;
+using Microsoft.AspNetCore.Mvc;
 using TechMoveSystem.Models;
 
-namespace TechMoveSystem.Controllers
+namespace TechMoveSystem.Controllers;
+
+public class ClientsController : Controller
 {
-    public class ClientsController : Controller
+    private readonly IHttpClientFactory _httpClientFactory;
+    public ClientsController(IHttpClientFactory httpClientFactory) => _httpClientFactory = httpClientFactory;
+    private HttpClient Api => _httpClientFactory.CreateClient("TechMoveApi");
+
+    public async Task<IActionResult> Index(string searchString, string regionFilter)
     {
-        private readonly ApplicationDbContext _context;
+        ViewBag.CurrentRegionFilter = regionFilter;
+        ViewBag.CurrentSearch = searchString;
+        var url = $"api/clients?searchString={Uri.EscapeDataString(searchString ?? "")}&regionFilter={Uri.EscapeDataString(regionFilter ?? "")}";
+        var clients = await Api.GetFromJsonAsync<List<Client>>(url) ?? new();
+        return View(clients);
+    }
 
-        public ClientsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    public IActionResult Create() => View();
 
-        
-        public async Task<IActionResult> Index(string searchString, string regionFilter)
-        {
-            var clients = from c in _context.Clients select c;
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id,Name,ContactDetails,Region")] Client client)
+    {
+        ModelState.Remove("Contracts");
+        if (!ModelState.IsValid) return View(client);
+        var response = await Api.PostAsJsonAsync("api/clients", new { client.Name, client.ContactDetails, client.Region });
+        if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+        return View(client);
+    }
 
-            
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                clients = clients.Where(s => s.Name.Contains(searchString));
-            }
+    [HttpGet]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id is null) return NotFound();
+        var client = await Api.GetFromJsonAsync<Client>($"api/clients/{id}");
+        return client is null ? NotFound() : View(client);
+    }
 
-           
-            if (!string.IsNullOrEmpty(regionFilter))
-            {
-                clients = clients.Where(x => x.Region == regionFilter);
-            }
-
-            
-            ViewBag.CurrentRegionFilter = regionFilter;
-            ViewBag.CurrentSearch = searchString;
-
-            return View(await clients.ToListAsync());
-        }
-
-        
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ContactDetails,Region")] Client client)
-        {
-           
-            ModelState.Remove("Contracts");
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Add(client);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    
-                    ModelState.AddModelError("", $"Database Error: Unable to save changes. {ex.Message}");
-                }
-            }
-
-            
-            foreach (var modelStateEntry in ModelState.Values)
-            {
-                foreach (var error in modelStateEntry.Errors)
-                {
-                    System.Diagnostics.Debug.WriteLine($"Validation Failure Target: {error.ErrorMessage}");
-                }
-            }
-
-            return View(client);
-        }
-
-       
-        [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var client = await _context.Clients.FindAsync(id);
-
-          
-            if (client == null)
-            {
-                TempData["ErrorMessage"] = $"System Routing Mismatch: Client record with ID #{id} does not exist in the ledger database context.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(client);
-        }
-
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ContactDetails,Region")] Client client)
-        {
-            if (id != client.Id)
-            {
-                return NotFound();
-            }
-
-            
-            ModelState.Remove("Contracts");
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(client);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    
-                    if (!_context.Clients.Any(e => e.Id == client.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Concurrency Error: Unable to save edit modifications. {ex.Message}");
-                }
-            }
-            return View(client);
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ContactDetails,Region")] Client client)
+    {
+        if (id != client.Id) return NotFound();
+        ModelState.Remove("Contracts");
+        if (!ModelState.IsValid) return View(client);
+        var response = await Api.PutAsJsonAsync($"api/clients/{id}", new { client.Name, client.ContactDetails, client.Region });
+        if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+        return View(client);
     }
 }

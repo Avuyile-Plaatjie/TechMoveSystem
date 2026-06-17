@@ -1,126 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TechMoveSystem.Data;
+using Microsoft.AspNetCore.Mvc;
 using TechMoveSystem.Models;
-using TechMoveSystem.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace TechMoveSystem.Controllers
+namespace TechMoveSystem.Controllers;
+
+public class ServiceRequestsController : Controller
 {
-    public class ServiceRequestsController : Controller
+    private readonly IHttpClientFactory _httpClientFactory;
+    public ServiceRequestsController(IHttpClientFactory httpClientFactory) => _httpClientFactory = httpClientFactory;
+    private HttpClient Api => _httpClientFactory.CreateClient("TechMoveApi");
+
+    public async Task<IActionResult> Index(string searchString, string statusFilter)
     {
-        private readonly ApplicationDbContext _context;
-        private readonly CurrencyService _currencyService;
+        ViewBag.CurrentSearch = searchString;
+        ViewBag.CurrentStatus = statusFilter;
+        var url = $"api/service-requests?searchString={Uri.EscapeDataString(searchString ?? "")}&statusFilter={Uri.EscapeDataString(statusFilter ?? "")}";
+        var requests = await Api.GetFromJsonAsync<List<ServiceRequest>>(url) ?? new();
+        return View(requests);
+    }
 
-        public ServiceRequestsController(ApplicationDbContext context, CurrencyService currencyService)
+    public async Task<IActionResult> Details(int? id)
+    {
+        if (id is null) return NotFound();
+        var request = await Api.GetFromJsonAsync<ServiceRequest>($"api/service-requests/{id}");
+        return request is null ? NotFound() : View(request);
+    }
+
+    public async Task<IActionResult> Create(int? contractId)
+    {
+        if (contractId is null) return NotFound();
+        var contract = await Api.GetFromJsonAsync<Contract>($"api/contracts/{contractId}");
+        if (contract is null || contract.Status is "Expired" or "On Hold")
         {
-            _context = context;
-            _currencyService = currencyService;
+            TempData["ErrorMessage"] = "Workflow Blocked: Cannot initiate service requests against an Expired or Suspended contract framework.";
+            return RedirectToAction("Index", "Contracts");
         }
+        ViewBag.ContractId = contractId;
+        return View();
+    }
 
-        
-        public async Task<IActionResult> Index(string searchString, string statusFilter)
-        {
-            
-            var requestsQuery = _context.ServiceRequests
-                .Include(s => s.Contract)
-                    .ThenInclude(c => c.Client)
-                .AsQueryable();
-
-            
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                requestsQuery = requestsQuery.Where(s => s.Description.Contains(searchString));
-            }
-
-            
-            if (!string.IsNullOrEmpty(statusFilter))
-            {
-                requestsQuery = requestsQuery.Where(s => s.Status == statusFilter);
-            }
-
-            
-            ViewBag.CurrentSearch = searchString;
-            ViewBag.CurrentStatus = statusFilter;
-
-            return View(await requestsQuery.ToListAsync());
-        }
-
-        
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var serviceRequest = await _context.ServiceRequests
-                .Include(s => s.Contract)
-                    .ThenInclude(c => c.Client)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (serviceRequest == null)
-            {
-                return NotFound();
-            }
-
-            return View(serviceRequest);
-        }
-
-       
-        public async Task<IActionResult> Create(int? contractId)
-        {
-            if (contractId == null) return NotFound();
-
-            var contract = await _context.Contracts.FindAsync(contractId);
-
-            
-            if (contract == null || contract.Status == "Expired" || contract.Status == "On Hold")
-            {
-                TempData["ErrorMessage"] = "Workflow Blocked: Cannot initiate service requests against an Expired or Suspended contract framework.";
-                return RedirectToAction("Index", "Contracts");
-            }
-
-            ViewBag.ContractId = contractId;
-            return View();
-        }
-
-       
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,CostInUsd,ContractId")] ServiceRequest serviceRequest)
-        {
-            
-            ModelState.Remove("Contract");
-
-           
-            try
-            {
-                decimal rate = await _currencyService.GetUsdToZarRate();
-                serviceRequest.CostInZar = serviceRequest.CostInUsd * rate;
-            }
-            catch (Exception)
-            {
-                
-                decimal fallbackRate = 18.50m;
-                serviceRequest.CostInZar = serviceRequest.CostInUsd * fallbackRate;
-            }
-
-           
-            serviceRequest.Status = "Pending";
-
-            if (ModelState.IsValid)
-            {
-                _context.Add(serviceRequest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            
-            ViewBag.ContractId = serviceRequest.ContractId;
-            return View(serviceRequest);
-        }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("Id,Description,CostInUsd,ContractId")] ServiceRequest serviceRequest)
+    {
+        ModelState.Remove("Contract"); ModelState.Remove("Status");
+        if (!ModelState.IsValid) { ViewBag.ContractId = serviceRequest.ContractId; return View(serviceRequest); }
+        var response = await Api.PostAsJsonAsync("api/service-requests", new { serviceRequest.Description, serviceRequest.CostInUsd, serviceRequest.ContractId });
+        if (response.IsSuccessStatusCode) return RedirectToAction(nameof(Index));
+        ModelState.AddModelError("", await response.Content.ReadAsStringAsync());
+        ViewBag.ContractId = serviceRequest.ContractId;
+        return View(serviceRequest);
     }
 }
